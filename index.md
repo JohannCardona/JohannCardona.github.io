@@ -1,4 +1,4 @@
-<script src="https://unpkg.launchdarkly-js-client-sdk@2.18.1/dist/ldclient.min.js"></script>
+<script src="https://unpkg.com/launchdarkly-js-client-sdk@2"></script>
 
 <h1>Great LinkedIn Learning Courses</h1>
 
@@ -13,17 +13,28 @@
 If you’re a developer working in any sort of team environment, tracking changes to a project’s source code is a vitally important aspect of the job. Git is one of the most popular tools for tracking and managing code, and there are a number of Git workflows that are commonly used by development teams for collaboration and management. In this course, Kevin Bowersox details several Git workflows that are popular with development teams. He details the main concepts behind these workflows, and shows how to choose the one that suits your needs—whether its Git Flow, GitHub Flow, or trunk-based development—to work more smoothly and eliminate pain points. If you’re looking for hands-on experience so you can work more effectively and collaboratively in Git, join Kevin in this course.
 
 <script>
-  var clientId = "6355262f2f314b10bd07aeae";
-  var flagName = "course-preview";
-  var user = {anonymous : true};
-  var ldClient = window.LDClient.initialize(client, user);
-  
-  ldClient.on("ready", function() {
-    document.getElementById("preview").styled.display = ldClient.variation(flagName, false) ? "block":"none";
-  });
-  
-  ldClient.on("change" + flagName, function(newVal, prevVal) {
-    document.getElementById("preview").style.display = newVal ? "block":"none";
-  });
-  
-</script>
+      // Set up the user properties. This user should appear on your LaunchDarkly users dashboard
+      // soon after you run the demo.
+      var user = {
+        name: 'Bob Loblaw',
+        key: 'example-user-key',
+      };
+
+      var div = document.createElement('div');
+      document.body.appendChild(div);
+
+      div.appendChild(document.createTextNode('Initializing...'));
+
+      // Create a new LDClient instance with your environment-specific SDK key
+      var ldclient = LDClient.initialize('6355262f2f314b10bd07aeae', user);
+
+      function render() {
+        var flagValue = ldclient.variation('course-preview', false);
+        var label = (flagValue ? 'Showing' : 'Not showing') + ' your feature to ' + user.key;
+        console.log("SDK successfully connected! The value of course-preview is " + flagValue + " for " + user.key)
+        div.replaceChild(document.createTextNode(label), div.firstChild);
+      }
+
+      ldclient.on('ready', render);
+      ldclient.on('change', render);
+    </script>
